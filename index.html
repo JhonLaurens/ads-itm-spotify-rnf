@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Análisis de Requisitos No Funcionales de Spotify — presentación educativa interactiva." />
+  <title>RNF Spotify — Análisis</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Saltar al contenido principal</a>
+
+  <header class="site-header" id="site-header" role="banner">
+    <div class="header-inner">
+      <a href="#hero" class="brand" aria-label="Inicio — RNF Spotify">
+        <img src="assets/spotify-logo.svg" alt="" width="32" height="32" class="brand-logo" loading="eager" />
+        <span class="brand-text">Spotify <span class="brand-sub">RNF</span></span>
+      </a>
+      <nav class="top-nav" aria-label="Navegación principal">
+        <ul class="top-nav-list">
+          <li><a href="#funcionalidad-1">Reproducción</a></li>
+          <li><a href="#funcionalidad-2">Recomendaciones</a></li>
+          <li><a href="#funcionalidad-3">Multidispositivo</a></li>
+          <li><a href="#conclusiones">Conclusiones</a></li>
+          <li><a href="#matriz">Matriz</a></li>
+        </ul>
+      </nav>
+      <div class="header-actions">
+        <button type="button" class="theme-toggle" id="theme-toggle" aria-pressed="false" aria-label="Cambiar tema claro u oscuro" title="Tema">
+          <span class="theme-icon theme-icon--moon" aria-hidden="true">◐</span>
+          <span class="theme-icon theme-icon--sun" aria-hidden="true">☀</span>
+        </button>
+        <button type="button" class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-controls="mobile-drawer" aria-label="Abrir menú">
+          <span class="menu-bar"></span>
+          <span class="menu-bar"></span>
+          <span class="menu-bar"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="drawer-overlay" id="drawer-overlay" hidden></div>
+  <aside class="mobile-drawer" id="mobile-drawer" aria-label="Menú lateral móvil" hidden>
+    <nav aria-label="Secciones">
+      <ul class="drawer-list">
+        <li><a href="#hero">Inicio</a></li>
+        <li><a href="#funcionalidad-1">Reproducción continua</a></li>
+        <li><a href="#funcionalidad-2">Recomendaciones</a></li>
+        <li><a href="#funcionalidad-3">Control multidispositivo</a></li>
+        <li><a href="#timeline">Línea de tiempo</a></li>
+        <li><a href="#conclusiones">Conclusiones</a></li>
+        <li><a href="#matriz">Matriz de tensiones</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <div class="layout">
+    <aside class="sidebar" id="sidebar" aria-label="Índice de secciones">
+      <div class="sidebar-track" role="navigation" aria-label="Progreso por sección">
+        <a href="#hero" class="spy-link" data-spy="hero"><span class="spy-dot"></span><span class="spy-label">Inicio</span></a>
+        <a href="#funcionalidad-1" class="spy-link" data-spy="funcionalidad-1"><span class="spy-dot"></span><span class="spy-label">Reproducción</span></a>
+        <a href="#funcionalidad-2" class="spy-link" data-spy="funcionalidad-2"><span class="spy-dot"></span><span class="spy-label">Recomendaciones</span></a>
+        <a href="#funcionalidad-3" class="spy-link" data-spy="funcionalidad-3"><span class="spy-dot"></span><span class="spy-label">Multidispositivo</span></a>
+        <a href="#timeline" class="spy-link" data-spy="timeline"><span class="spy-dot"></span><span class="spy-label">Timeline</span></a>
+        <a href="#conclusiones" class="spy-link" data-spy="conclusiones"><span class="spy-dot"></span><span class="spy-label">Conclusiones</span></a>
+        <a href="#matriz" class="spy-link" data-spy="matriz"><span class="spy-dot"></span><span class="spy-label">Matriz</span></a>
+      </div>
+      <div class="sidebar-progress" aria-hidden="true">
+        <div class="sidebar-progress-bar" id="sidebar-progress-bar"></div>
+      </div>
+    </aside>
+
+    <main id="main-content" class="main">
+      <section class="hero" id="hero" aria-labelledby="hero-title">
+        <div class="hero-bg">
+          <canvas id="wave-canvas" class="wave-canvas" aria-hidden="true" width="1200" height="200"></canvas>
+        </div>
+        <div class="hero-content">
+          <p class="hero-kicker">ADS · Requisitos no funcionales</p>
+          <h1 id="hero-title" class="hero-title">Análisis RNF de <span class="text-accent">Spotify</span></h1>
+          <p class="hero-lead">Disponibilidad, rendimiento, consistencia e interoperabilidad aplicados a tres capacidades clave del producto.</p>
+          <a href="#funcionalidad-1" class="btn btn-primary">Explorar análisis</a>
+        </div>
+      </section>
+
+      <nav class="breadcrumbs" aria-label="Migas de pan" id="breadcrumbs">
+        <ol class="breadcrumb-list">
+          <li><a href="#hero">Inicio</a></li>
+          <li aria-hidden="true">/</li>
+          <li><span id="breadcrumb-current">Portada</span></li>
+        </ol>
+      </nav>
+
+      <!-- Funcionalidad 1 -->
+      <section class="section section--func" id="funcionalidad-1" data-section-title="Reproducción continua" aria-labelledby="f1-title">
+        <div class="section-header reveal">
+          <span class="section-num">01</span>
+          <h2 id="f1-title" class="section-title">Reproducción continua</h2>
+          <p class="section-desc">Capacidad de pasar de una canción a otra sin silencios ni interrupciones, manteniendo el flujo del audio incluso con cambios de red.</p>
+        </div>
+
+        <div class="arch-grid reveal" role="list">
+          <div class="arch-card" role="listitem">
+            <span class="arch-icon" aria-hidden="true"><img src="assets/icon-cdn.svg" alt="" width="40" height="40" loading="lazy" /></span>
+            <h3 class="arch-card-title">CDN global</h3>
+            <p>Failover y edge cercano al usuario.</p>
+          </div>
+          <div class="arch-card" role="listitem">
+            <span class="arch-icon" aria-hidden="true"><img src="assets/icon-stream.svg" alt="" width="40" height="40" loading="lazy" /></span>
+            <h3 class="arch-card-title">HLS / DASH</h3>
+            <p>Streaming adaptativo multibitrate.</p>
+          </div>
+          <div class="arch-card" role="listitem">
+            <span class="arch-icon" aria-hidden="true"><img src="assets/icon-cache.svg" alt="" width="40" height="40" loading="lazy" /></span>
+            <h3 class="arch-card-title">Caché + ML</h3>
+            <p>Prefetch inteligente offline-first.</p>
+          </div>
+        </div>
+
+        <div class="tabs" data-tabs="f1">
+          <div class="tabs-list" role="tablist" aria-label="RNF de reproducción continua">
+            <button type="button" class="tab-btn is-active" role="tab" aria-selected="true" aria-controls="f1-panel-0" id="f1-tab-0">Disponibilidad</button>
+            <button type="button" class="tab-btn" role="tab" aria-selected="false" aria-controls="f1-panel-1" id="f1-tab-1">Rendimiento</button>
+            <button type="button" class="tab-btn" role="tab" aria-selected="false" aria-controls="f1-panel-2" id="f1-tab-2">Escalabilidad</button>
+          </div>
+          <div class="tab-panels">
+            <div class="tab-panel is-active" role="tabpanel" id="f1-panel-0" aria-labelledby="f1-tab-0">
+              <p>Sistema operativo <strong>24/7</strong> sin interrupciones.</p>
+              <p>Métrica: <button type="button" class="metric-tip" data-tooltip="Tiempo máximo de silencio aceptable al cambiar de red (objetivo de diseño).">&lt; 0,5 s silencio</button> en cambios de red.</p>
+            </div>
+            <div class="tab-panel" role="tabpanel" id="f1-panel-1" aria-labelledby="f1-tab-1" hidden>
+              <p>Ajuste dinámico de calidad según ancho de banda.</p>
+              <p>Métrica: <button type="button" class="metric-tip" data-tooltip="Tiempo desde la decisión de cambio hasta reproducción estable.">&lt; 2 s</button> en cambio de bitrate.</p>
+            </div>
+            <div class="tab-panel" role="tabpanel" id="f1-panel-2" aria-labelledby="f1-tab-2" hidden>
+              <p>Manejo de picos masivos de usuarios concurrentes.</p>
+              <p>Métrica: <button type="button" class="metric-tip" data-tooltip="SLA típico de servicios críticos (tres nueves).">99,9 % uptime</button> objetivo.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion" data-accordion="f1">
+          <h3 class="subsection-title">Escenarios arquitectónicos</h3>
+          <div class="accordion-item">
+            <button type="button" class="accordion-trigger" id="acc-f1-0" aria-expanded="true" aria-controls="acc-f1-panel-0">
+              Disponibilidad — Tren con señal intermitente
+              <span class="accordion-icon" aria-hidden="true"></span>
+            </button>
+            <div class="accordion-panel" id="acc-f1-panel-0" role="region" aria-labelledby="acc-f1-0">
+              <dl class="scenario-dl">
+                <dt>Fuente</dt><dd>Usuario en tren con señal intermitente.</dd>
+                <dt>Estímulo</dt><dd>Cambio WiFi → 4G con pérdida de 3–5 s.</dd>
+                <dt>Respuesta</dt><dd>Música continúa sin pausas (buffer precargado).</dd>
+                <dt>Medida</dt><dd>&lt; 0,5 s silencio, 0 interrupciones perceptibles.</dd>
+              </dl>
+            </div>
+          </div>
+        </div>
+
+        <div class="relevance reveal">
+          <h3 class="subsection-title">Relevancia</h3>
+          <ul class="check-list">
+            <li>78 % de usuarios escuchan en movilidad.</li>
+            <li>Interrupciones generan abandono inmediato.</li>
+            <li>Competencia intensa: migración a servicios más estables.</li>
+            <li>Pausas &gt; 3 s percibidas como fallo.</li>
+          </ul>
+        </div>
+
+        <div class="tradeoff reveal">
+          <h3 class="subsection-title">Trade-off: Disponibilidad vs Rendimiento</h3>
+          <div class="tradeoff-grid">
+            <div class="tradeoff-col tradeoff-col--before">
+              <span class="tradeoff-label">Antes</span>
+              <p>Pre-cargar 5 min consume más batería.</p>
+            </div>
+            <div class="tradeoff-arrow" aria-hidden="true">→</div>
+            <div class="tradeoff-col tradeoff-col--after">
+              <span class="tradeoff-label">Solución</span>
+              <p>Buffer adaptativo (30 s WiFi, 15 s 4G).</p>
+              <p class="tradeoff-result"><strong>Resultado:</strong> ~99,5 % disponibilidad, −40 % consumo.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="implications reveal">
+          <h3 class="subsection-title">Implicaciones arquitectónicas</h3>
+          <ul class="pill-list">
+            <li>CDN distribuida global con failover automático</li>
+            <li>Streaming adaptativo (HLS/DASH, múltiples bitrates)</li>
+            <li>Caché local inteligente con ML</li>
+            <li>Arquitectura offline-first</li>
+          </ul>
+        </div>
+
+        <div class="tactics reveal">
+          <h3 class="subsection-title">Tácticas</h3>
+          <div class="tactic-cards">
+            <article class="tactic-card">
+              <h4>Circuit breaker + fallback</h4>
+              <p>3 errores → CDN alternativa; reduce latencia ~70 % en alta demanda.</p>
+              <button type="button" class="btn btn-ghost btn-modal" data-modal="tactic-f1-1">Detalle</button>
+            </article>
+            <article class="tactic-card">
+              <h4>Adaptive Bitrate (ABR)</h4>
+              <p>Throughput cada 2 s + DASH; ~95 % menos interrupciones por buffering.</p>
+              <button type="button" class="btn btn-ghost btn-modal" data-modal="tactic-f1-2">Detalle</button>
+            </article>
+          </div>
+        </div>
+
+        <figure class="code-block reveal">
+          <figcaption>Ejemplo conceptual (buffer adaptativo)</figcaption>
+          <pre><code class="language-js"><span class="tok-kw">function</span> <span class="tok-fn">bufferSeconds</span>(network) {
+  <span class="tok-kw">return</span> network === <span class="tok-str">'wifi'</span> ? <span class="tok-num">30</span> : <span class="tok-num">15</span>;
+}</code></pre>
+        </figure>
+      </section>
+
+      <!-- Funcionalidad 2 -->
+      <section class="section section--func" id="funcionalidad-2" data-section-title="Recomendaciones personalizadas" aria-labelledby="f2-title">
+        <div class="section-header reveal">
+          <span class="section-num">02</span>
+          <h2 id="f2-title" class="section-title">Recomendaciones personalizadas</h2>
+          <p class="section-desc">Sistemas que analizan miles de millones de interacciones para predecir qué música te gustará.</p>
+        </div>
+
+        <div class="arch-grid reveal" role="list">
+          <div class="arch-card" role="listitem">
+            <span class="arch-icon" aria-hidden="true"><img src="assets/icon-pipeline.svg" alt="" width="40" height="40" loading="lazy" /></span>
+            <h3 class="arch-card-title">Pipeline batch</h3>
+            <p>Spark nocturno → Cassandra.</p>
+          </div>
+          <div class="arch-card" role="listitem">
+            <span class="arch-icon" aria-hidden="true"><img src="assets/icon-cache-layers.svg" alt="" width="40" height="40" loading="lazy" /></span>
+            <h3 class="arch-card-title">Caché L1–L3</h3>
+            <p>Redis, Memcached, Cassandra.</p>
+          </div>
+          <div class="arch-card" role="listitem">
+            <span class="arch-icon" aria-hidden="true"><img src="assets/icon-brain.svg" alt="" width="40" height="40" loading="lazy" /></span>
+            <h3 class="arch-card-title">Modelo híbrido</h3>
+            <p>CF offline + bandits online.</p>
+          </div>
+        </div>
+
+        <div class="tabs" data-tabs="f2">
+          <div class="tabs-list" role="tablist" aria-label="RNF de recomendaciones">
+            <button type="button" class="tab-btn is-active" role="tab" aria-selected="true" aria-controls="f2-panel-0" id="f2-tab-0">Rendimiento</button>
+            <button type="button" class="tab-btn" role="tab" aria-selected="false" aria-controls="f2-panel-1" id="f2-tab-1">Precisión funcional</button>
+          </div>
+          <div class="tab-panels">
+            <div class="tab-panel is-active" role="tabpanel" id="f2-panel-0" aria-labelledby="f2-tab-0">
+              <p>Tiempo de respuesta para experiencias como Discover Weekly.</p>
+              <p>Métrica: <button type="button" class="metric-tip" data-tooltip="Percentil 95: el 95 % de las peticiones bajo este umbral.">p95 &lt; 800 ms</button>.</p>
+            </div>
+            <div class="tab-panel" role="tabpanel" id="f2-panel-1" aria-labelledby="f2-tab-1" hidden>
+              <p>Correctitud de las sugerencias respecto al gusto del usuario.</p>
+              <p>Métrica: <button type="button" class="metric-tip" data-tooltip="Canciones que el usuario no salta en la primera reproducción.">&gt; 80 %</button> relevantes; <button type="button" class="metric-tip" data-tooltip="Fracción de skips sobre el total servido.">skip rate &lt; 30 %</button>.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion" data-accordion="f2">
+          <h3 class="subsection-title">Escenarios arquitectónicos</h3>
+          <div class="accordion-item">
+            <button type="button" class="accordion-trigger" id="acc-f2-0" aria-expanded="false" aria-controls="acc-f2-panel-0">
+              Rendimiento — Discover Weekly (10 M simultáneos)
+              <span class="accordion-icon" aria-hidden="true"></span>
+            </button>
+            <div class="accordion-panel" id="acc-f2-panel-0" role="region" aria-labelledby="acc-f2-0" hidden>
+              <dl class="scenario-dl">
+                <dt>Fuente</dt><dd>Usuario abre Discover Weekly.</dd>
+                <dt>Estímulo</dt><dd>Solicitud de playlist de 30 canciones.</dd>
+                <dt>Respuesta</dt><dd>Playlist en &lt; 800 ms (batch precalculado).</dd>
+                <dt>Medida</dt><dd>p95 &lt; 800 ms, p99 &lt; 1,5 s, &gt; 100 K req/s.</dd>
+              </dl>
+            </div>
+          </div>
+          <div class="accordion-item">
+            <button type="button" class="accordion-trigger" id="acc-f2-1" aria-expanded="false" aria-controls="acc-f2-panel-1">
+              Precisión — Perfil rock alternativo (500+ canciones)
+              <span class="accordion-icon" aria-hidden="true"></span>
+            </button>
+            <div class="accordion-panel" id="acc-f2-panel-1" role="region" aria-labelledby="acc-f2-1" hidden>
+              <dl class="scenario-dl">
+                <dt>Fuente</dt><dd>Usuario con historial rock alternativo.</dd>
+                <dt>Estímulo</dt><dd>Algoritmo genera 30 canciones.</dd>
+                <dt>Respuesta</dt><dd>Mínimo 24/30 relevantes (80 %).</dd>
+                <dt>Medida</dt><dd>Precisión &gt; 80 %, recall &gt; 70 %, skip &lt; 30 %.</dd>
+              </dl>
+            </div>
+          </div>
+        </div>
+
+        <div class="relevance reveal">
+          <h3 class="subsection-title">Relevancia</h3>
+          <ul class="check-list">
+            <li>&gt; 1 s se percibe como lento.</li>
+            <li>Recomendaciones rápidas ↑ retención ~23 %.</li>
+            <li>Real-time es ~40× más caro que batch.</li>
+            <li>Precisión ↑ tiempo de escucha ~35 %.</li>
+          </ul>
+        </div>
+
+        <div class="tradeoff reveal">
+          <h3 class="subsection-title">Trade-offs</h3>
+          <div class="tradeoff-stack">
+            <div class="tradeoff-grid">
+              <div class="tradeoff-col tradeoff-col--before">
+                <span class="tradeoff-label">Rendimiento vs precisión</span>
+                <p>Modelos ML complejos: 800 ms → ~5 s de latencia.</p>
+              </div>
+              <div class="tradeoff-arrow" aria-hidden="true">→</div>
+              <div class="tradeoff-col tradeoff-col--after">
+                <span class="tradeoff-label">Solución</span>
+                <p>Híbrido: modelo complejo offline + simple online.</p>
+                <p class="tradeoff-result">~80 % precisión con &lt; 800 ms.</p>
+              </div>
+            </div>
+            <div class="tradeoff-grid">
+              <div class="tradeoff-col tradeoff-col--before">
+                <span class="tradeoff-label">Escalabilidad vs personalización</span>
+                <p>Personalización fina no escala a 500 M usuarios.</p>
+              </div>
+              <div class="tradeoff-arrow" aria-hidden="true">→</div>
+              <div class="tradeoff-col tradeoff-col--after">
+                <span class="tradeoff-label">Solución</span>
+                <p>Clustering en ~1000 segmentos.</p>
+                <p class="tradeoff-result">−95 % cómputo, ~75 % precisión.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="implications reveal">
+          <h3 class="subsection-title">Implicaciones arquitectónicas</h3>
+          <ul class="pill-list">
+            <li>Pipeline batch Lambda (Spark nocturno → Cassandra)</li>
+            <li>Caché multi-nivel (L1 Redis, L2 Memcached, L3 Cassandra)</li>
+            <li>Modelo híbrido (collaborative filtering + contextual bandits)</li>
+            <li>Feature store con p99 &lt; 10 ms</li>
+          </ul>
+        </div>
+
+        <div class="tactics reveal">
+          <h3 class="subsection-title">Tácticas</h3>
+          <div class="tactic-cards">
+            <article class="tactic-card">
+              <h4>Pre-computación + fallback</h4>
+              <p>Nocturno + fallback demográfico; −90 % costos, &lt; 800 ms para 99,5 %.</p>
+              <button type="button" class="btn btn-ghost btn-modal" data-modal="tactic-f2-1">Detalle</button>
+            </article>
+            <article class="tactic-card">
+              <h4>Multi-armed bandit</h4>
+              <p>Thompson sampling 80/20; +40 % diversidad, +12 % retención a 6 meses.</p>
+              <button type="button" class="btn btn-ghost btn-modal" data-modal="tactic-f2-2">Detalle</button>
+            </article>
+          </div>
+        </div>
+
+        <figure class="code-block reveal">
+          <figcaption>Patrón conceptual (precálculo)</figcaption>
+          <pre><code class="language-text"><span class="tok-cmt"># Pseudocódigo nightly job</span>
+<span class="tok-kw">schedule</span>(<span class="tok-str">'0 2 * * *'</span>, () =&gt; {
+  <span class="tok-fn">precomputePlaylists</span>(users);
+});</code></pre>
+        </figure>
+      </section>
+
+      <!-- Funcionalidad 3 -->
+      <section class="section section--func" id="funcionalidad-3" data-section-title="Control multidispositivo" aria-labelledby="f3-title">
+        <div class="section-header reveal">
+          <span class="section-num">03</span>
+          <h2 id="f3-title" class="section-title">Control multidispositivo</h2>
+          <p class="section-desc">Reproducir en altavoces, TVs, consolas y PCs controlando desde cualquier dispositivo de forma sincronizada.</p>
+        </div>
+
+        <div class="arch-grid reveal" role="list">
+          <div class="arch-card" role="listitem">
+            <span class="arch-icon" aria-hidden="true"><img src="assets/icon-events.svg" alt="" width="40" height="40" loading="lazy" /></span>
+            <h3 class="arch-card-title">Event sourcing</h3>
+            <p>Comandos inmutables en Kafka.</p>
+          </div>
+          <div class="arch-card" role="listitem">
+            <span class="arch-icon" aria-hidden="true"><img src="assets/icon-sync.svg" alt="" width="40" height="40" loading="lazy" /></span>
+            <h3 class="arch-card-title">CRDT</h3>
+            <p>Convergencia sin bloqueos fuertes.</p>
+          </div>
+          <div class="arch-card" role="listitem">
+            <span class="arch-icon" aria-hidden="true"><img src="assets/icon-socket.svg" alt="" width="40" height="40" loading="lazy" /></span>
+            <h3 class="arch-card-title">WebSocket</h3>
+            <p>Canal persistente &lt; 100 ms.</p>
+          </div>
+        </div>
+
+        <div class="tabs" data-tabs="f3">
+          <div class="tabs-list" role="tablist" aria-label="RNF multidispositivo">
+            <button type="button" class="tab-btn is-active" role="tab" aria-selected="true" aria-controls="f3-panel-0" id="f3-tab-0">Interoperabilidad</button>
+            <button type="button" class="tab-btn" role="tab" aria-selected="false" aria-controls="f3-panel-1" id="f3-tab-1">Consistencia</button>
+          </div>
+          <div class="tab-panels">
+            <div class="tab-panel is-active" role="tabpanel" id="f3-panel-0" aria-labelledby="f3-tab-0">
+              <p>Compatibilidad entre ecosistemas heterogéneos.</p>
+              <p>Métrica: <button type="button" class="metric-tip" data-tooltip="Catálogo de dispositivos y SDKs soportados.">300+ dispositivos</button>; <button type="button" class="metric-tip" data-tooltip="Tiempo comando → acción observable.">&lt; 500 ms</button>; <button type="button" class="metric-tip" data-tooltip="Fallos de entrega o ejecución.">&lt; 1 % error</button>.</p>
+            </div>
+            <div class="tab-panel" role="tabpanel" id="f3-panel-1" aria-labelledby="f3-tab-1" hidden>
+              <p>Sincronización de estado distribuido entre clientes.</p>
+              <p>Métrica: <button type="button" class="metric-tip" data-tooltip="Ventana para alinear vistas entre dispositivos.">Consistencia eventual &lt; 2 s</button>; <button type="button" class="metric-tip" data-tooltip="No deben perderse comandos del usuario.">0 pérdidas</button>.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion" data-accordion="f3">
+          <h3 class="subsection-title">Escenarios arquitectónicos</h3>
+          <div class="accordion-item">
+            <button type="button" class="accordion-trigger" id="acc-f3-0" aria-expanded="false" aria-controls="acc-f3-panel-0">
+              Interoperabilidad — TV Samsung, iPhone, Sonos
+              <span class="accordion-icon" aria-hidden="true"></span>
+            </button>
+            <div class="accordion-panel" id="acc-f3-panel-0" role="region" aria-labelledby="acc-f3-0" hidden>
+              <dl class="scenario-dl">
+                <dt>Fuente</dt><dd>Control desde iPhone, transferencia a Sonos.</dd>
+                <dt>Estímulo</dt><dd>Play/pause, volumen, cambio de tema.</dd>
+                <dt>Respuesta</dt><dd>&lt; 500 ms en dispositivos con protocolos distintos.</dd>
+                <dt>Medida</dt><dd>300+ dispositivos, &lt; 500 ms, &lt; 1 % error.</dd>
+              </dl>
+            </div>
+          </div>
+          <div class="accordion-item">
+            <button type="button" class="accordion-trigger" id="acc-f3-1" aria-expanded="false" aria-controls="acc-f3-panel-1">
+              Consistencia — Cola desde móvil + volumen desde desktop
+              <span class="accordion-icon" aria-hidden="true"></span>
+            </button>
+            <div class="accordion-panel" id="acc-f3-panel-1" role="region" aria-labelledby="acc-f3-1" hidden>
+              <dl class="scenario-dl">
+                <dt>Fuente</dt><dd>Varios clientes modifican estado compartido.</dd>
+                <dt>Estímulo</dt><dd>5 canciones añadidas + cambio de volumen.</dd>
+                <dt>Respuesta</dt><dd>Estado idéntico en todos los dispositivos.</dd>
+                <dt>Medida</dt><dd>Eventual &lt; 2 s, 0 pérdidas, resolución automática.</dd>
+              </dl>
+            </div>
+          </div>
+        </div>
+
+        <div class="relevance reveal">
+          <h3 class="subsection-title">Relevancia</h3>
+          <ul class="check-list">
+            <li>50+ fabricantes, protocolos propietarios.</li>
+            <li>Expectativa de control unificado sin fricción.</li>
+            <li>Diferenciación frente a competidores.</li>
+            <li>Complejidad distribuida sin un único centro.</li>
+          </ul>
+        </div>
+
+        <div class="tradeoff reveal">
+          <h3 class="subsection-title">Trade-offs</h3>
+          <div class="tradeoff-stack">
+            <div class="tradeoff-grid">
+              <div class="tradeoff-col tradeoff-col--before">
+                <span class="tradeoff-label">Consistencia vs disponibilidad</span>
+                <p>Consistencia fuerte bloquea dispositivos lentos.</p>
+              </div>
+              <div class="tradeoff-arrow" aria-hidden="true">→</div>
+              <div class="tradeoff-col tradeoff-col--after">
+                <span class="tradeoff-label">Solución</span>
+                <p>Consistencia eventual (local + sync).</p>
+                <p class="tradeoff-result">99,9 % disponibilidad; &lt; 2 s en 95 % casos.</p>
+              </div>
+            </div>
+            <div class="tradeoff-grid">
+              <div class="tradeoff-col tradeoff-col--before">
+                <span class="tradeoff-label">Interoperabilidad vs rendimiento</span>
+                <p>Múltiples protocolos añaden overhead.</p>
+              </div>
+              <div class="tradeoff-arrow" aria-hidden="true">→</div>
+              <div class="tradeoff-col tradeoff-col--after">
+                <span class="tradeoff-label">Solución</span>
+                <p>Capa de abstracción con adaptadores ligeros.</p>
+                <p class="tradeoff-result">&lt; 500 ms con ~50 ms overhead.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="implications reveal">
+          <h3 class="subsection-title">Implicaciones arquitectónicas</h3>
+          <ul class="pill-list">
+            <li>Event sourcing (Kafka)</li>
+            <li>CRDT para convergencia</li>
+            <li>WebSocket bidireccional</li>
+            <li>Device registry service</li>
+          </ul>
+        </div>
+
+        <div class="tactics reveal">
+          <h3 class="subsection-title">Tácticas</h3>
+          <div class="tactic-cards">
+            <article class="tactic-card">
+              <h4>Operational Transformation (OT)</h4>
+              <p>Cola concurrente: operaciones transformadas; 0 pérdidas.</p>
+              <button type="button" class="btn btn-ghost btn-modal" data-modal="tactic-f3-1">Detalle</button>
+            </article>
+            <article class="tactic-card">
+              <h4>Health check + auto-discovery</h4>
+              <p>Heartbeat 10 s, offline 30 s, mDNS; −85 % frustración.</p>
+              <button type="button" class="btn btn-ghost btn-modal" data-modal="tactic-f3-2">Detalle</button>
+            </article>
+          </div>
+        </div>
+
+        <figure class="code-block reveal">
+          <figcaption>Esquema de evento (conceptual)</figcaption>
+          <pre><code class="language-json">{
+  <span class="tok-str">"type"</span>: <span class="tok-str">"QUEUE_PATCH"</span>,
+  <span class="tok-str">"vectorClock"</span>: { <span class="tok-str">"deviceA"</span>: <span class="tok-num">12</span>, <span class="tok-str">"deviceB"</span>: <span class="tok-num">9</span> }
+}</code></pre>
+        </figure>
+      </section>
+
+      <!-- Timeline -->
+      <section class="section section--timeline" id="timeline" data-section-title="Línea de tiempo" aria-labelledby="timeline-title">
+        <div class="section-header reveal">
+          <span class="section-num">◇</span>
+          <h2 id="timeline-title" class="section-title">Las tres funcionalidades en contexto</h2>
+          <p class="section-desc">Recorrido visual del análisis: de la experiencia de audio continua al ecosistema distribuido.</p>
+        </div>
+        <ol class="timeline" aria-label="Línea de tiempo de funcionalidades">
+          <li class="timeline-item reveal">
+            <span class="timeline-marker">1</span>
+            <div class="timeline-body">
+              <h3>Reproducción continua</h3>
+              <p>Disponibilidad y ABR como base de la confianza del usuario.</p>
+            </div>
+          </li>
+          <li class="timeline-item reveal">
+            <span class="timeline-marker">2</span>
+            <div class="timeline-body">
+              <h3>Recomendaciones</h3>
+              <p>Rendimiento y precisión vía batch, caché y modelos híbridos.</p>
+            </div>
+          </li>
+          <li class="timeline-item reveal">
+            <span class="timeline-marker">3</span>
+            <div class="timeline-body">
+              <h3>Multidispositivo</h3>
+              <p>Interoperabilidad y consistencia eventual en tiempo real.</p>
+            </div>
+          </li>
+        </ol>
+      </section>
+
+      <!-- Conclusiones -->
+      <section class="section section--conclusions" id="conclusiones" data-section-title="Conclusiones" aria-labelledby="conc-title">
+        <div class="section-header reveal">
+          <span class="section-num">◆</span>
+          <h2 id="conc-title" class="section-title">Conclusiones</h2>
+        </div>
+        <ol class="conclusion-list reveal">
+          <li><strong>Disponibilidad y rendimiento</strong> son críticos: ~95 % abandono por interrupciones.</li>
+          <li><strong>Consistencia eventual</strong> suele bastar: tolerancia 1–2 s sin bloqueos.</li>
+          <li><strong>Pre-cómputo</strong> reduce latencia ~90 % y costos ~80 %.</li>
+          <li><strong>Interoperabilidad</strong> exige inversión continua en 300+ dispositivos.</li>
+          <li><strong>Trade-offs</strong> inevitables: priorizar según contexto de negocio.</li>
+        </ol>
+      </section>
+
+      <!-- Matriz -->
+      <section class="section section--matrix" id="matriz" data-section-title="Matriz de tensiones" aria-labelledby="matrix-title">
+        <div class="section-header reveal">
+          <span class="section-num">⊞</span>
+          <h2 id="matrix-title" class="section-title">Matriz de tensiones entre RNF</h2>
+          <p class="section-desc">Pulsa una celda para ver la relación. Leyenda: complementarios vs conflicto (trade-off).</p>
+        </div>
+        <div class="matrix-legend reveal" role="group" aria-label="Leyenda">
+          <span class="legend-item"><span class="legend-dot legend-dot--ok" aria-hidden="true"></span> Complementarios</span>
+          <span class="legend-item"><span class="legend-dot legend-dot--warn" aria-hidden="true"></span> Conflicto</span>
+          <span class="legend-item"><span class="legend-dot legend-dot--na" aria-hidden="true"></span> Misma dimensión</span>
+        </div>
+        <div class="matrix-wrap reveal">
+          <table class="tension-table" id="tension-table" role="grid" aria-label="Matriz de tensiones interactiva">
+            <thead>
+              <tr>
+                <th scope="col">RNF</th>
+                <th scope="col">Disponibilidad</th>
+                <th scope="col">Rendimiento</th>
+                <th scope="col">Consistencia</th>
+                <th scope="col">Interoperabilidad</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Disponibilidad</th>
+                <td><button type="button" class="cell-btn" data-matrix="0-0" aria-label="Disponibilidad vs Disponibilidad">—</button></td>
+                <td><button type="button" class="cell-btn cell-btn--warn" data-matrix="0-1" aria-label="Disponibilidad vs Rendimiento, conflicto">⚠</button></td>
+                <td><button type="button" class="cell-btn cell-btn--warn" data-matrix="0-2" aria-label="Disponibilidad vs Consistencia, conflicto">⚠</button></td>
+                <td><button type="button" class="cell-btn cell-btn--ok" data-matrix="0-3" aria-label="Disponibilidad vs Interoperabilidad, complementarios">✓</button></td>
+              </tr>
+              <tr>
+                <th scope="row">Rendimiento</th>
+                <td><button type="button" class="cell-btn cell-btn--warn" data-matrix="1-0" aria-label="Rendimiento vs Disponibilidad, conflicto">⚠</button></td>
+                <td><button type="button" class="cell-btn" data-matrix="1-1" aria-label="Rendimiento vs Rendimiento">—</button></td>
+                <td><button type="button" class="cell-btn cell-btn--ok" data-matrix="1-2" aria-label="Rendimiento vs Consistencia, complementarios">✓</button></td>
+                <td><button type="button" class="cell-btn cell-btn--warn" data-matrix="1-3" aria-label="Rendimiento vs Interoperabilidad, conflicto">⚠</button></td>
+              </tr>
+              <tr>
+                <th scope="row">Consistencia</th>
+                <td><button type="button" class="cell-btn cell-btn--warn" data-matrix="2-0" aria-label="Consistencia vs Disponibilidad, conflicto">⚠</button></td>
+                <td><button type="button" class="cell-btn cell-btn--ok" data-matrix="2-1" aria-label="Consistencia vs Rendimiento, complementarios">✓</button></td>
+                <td><button type="button" class="cell-btn" data-matrix="2-2" aria-label="Consistencia vs Consistencia">—</button></td>
+                <td><button type="button" class="cell-btn cell-btn--warn" data-matrix="2-3" aria-label="Consistencia vs Interoperabilidad, conflicto">⚠</button></td>
+              </tr>
+              <tr>
+                <th scope="row">Interoperabilidad</th>
+                <td><button type="button" class="cell-btn cell-btn--ok" data-matrix="3-0" aria-label="Interoperabilidad vs Disponibilidad, complementarios">✓</button></td>
+                <td><button type="button" class="cell-btn cell-btn--warn" data-matrix="3-1" aria-label="Interoperabilidad vs Rendimiento, conflicto">⚠</button></td>
+                <td><button type="button" class="cell-btn cell-btn--warn" data-matrix="3-2" aria-label="Interoperabilidad vs Consistencia, conflicto">⚠</button></td>
+                <td><button type="button" class="cell-btn" data-matrix="3-3" aria-label="Interoperabilidad vs Interoperabilidad">—</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="matrix-detail reveal" id="matrix-detail" role="region" aria-live="polite" tabindex="-1">
+          <h3 class="matrix-detail-title" id="matrix-detail-title">Selecciona una celda</h3>
+          <p class="matrix-detail-text" id="matrix-detail-text">La explicación del cruce aparecerá aquí.</p>
+        </div>
+      </section>
+
+      <footer class="site-footer" role="contentinfo">
+        <div class="footer-inner">
+          <p class="footer-credit">Proyecto académico — Análisis de RNF inspirado en el dominio de <strong>Spotify</strong>. Logotipos y marca citados con fines educativos.</p>
+          <p class="footer-meta">HTML · CSS · JavaScript · <time datetime="2026">2026</time></p>
+        </div>
+      </footer>
+    </main>
+  </div>
+
+  <!-- Tooltip -->
+  <div class="tooltip-root" id="tooltip-root" role="tooltip" hidden></div>
+
+  <!-- Modal -->
+  <div class="modal-root" id="modal-root" hidden aria-hidden="true">
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modal-title" tabindex="-1">
+      <button type="button" class="modal-close" data-close-modal aria-label="Cerrar">&times;</button>
+      <h2 id="modal-title" class="modal-title"></h2>
+      <div class="modal-body" id="modal-body"></div>
+    </div>
+  </div>
+
+  <script src="script.js" defer></script>
+</body>
+</html>

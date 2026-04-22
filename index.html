@@ -4,11 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Análisis de Requisitos No Funcionales de Spotify — presentación educativa interactiva." />
+  <meta name="theme-color" content="#191414" />
+  <meta property="og:title" content="Análisis RNF — Spotify (ADS-ITM)" />
+  <meta property="og:description" content="Requisitos no funcionales: reproducción continua, recomendaciones y control multidispositivo. Material académico ilustrativo." />
+  <meta property="og:type" content="website" />
   <title>RNF Spotify — Análisis</title>
+  <link rel="icon" href="public/assets/favicon.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="public/css/styles.css" />
 </head>
 <body>
   <a class="skip-link" href="#main-content">Saltar al contenido principal</a>
@@ -16,18 +21,9 @@
   <header class="site-header" id="site-header" role="banner">
     <div class="header-inner">
       <a href="#hero" class="brand" aria-label="Inicio — RNF Spotify">
-        <img src="assets/spotify-logo.svg" alt="" width="32" height="32" class="brand-logo" loading="eager" />
+        <img src="public/assets/spotify-logo.svg" alt="" width="32" height="32" class="brand-logo" loading="eager" />
         <span class="brand-text">Spotify <span class="brand-sub">RNF</span></span>
       </a>
-      <nav class="top-nav" aria-label="Navegación principal">
-        <ul class="top-nav-list">
-          <li><a href="#funcionalidad-1">Reproducción</a></li>
-          <li><a href="#funcionalidad-2">Recomendaciones</a></li>
-          <li><a href="#funcionalidad-3">Multidispositivo</a></li>
-          <li><a href="#conclusiones">Conclusiones</a></li>
-          <li><a href="#matriz">Matriz</a></li>
-        </ul>
-      </nav>
       <div class="header-actions">
         <button type="button" class="theme-toggle" id="theme-toggle" aria-pressed="false" aria-label="Cambiar tema claro u oscuro" title="Tema">
           <span class="theme-icon theme-icon--moon" aria-hidden="true">◐</span>
@@ -86,6 +82,13 @@
         </div>
       </section>
 
+      <aside class="disclaimer" id="nota-metodologica" aria-labelledby="disclaimer-title">
+        <h2 id="disclaimer-title" class="disclaimer-title">Nota metodológica</h2>
+        <p class="disclaimer-text">
+          Las <strong>cifras, porcentajes y SLAs</strong> mostrados en esta página son <strong>valores orientativos e ilustrativos</strong> para el análisis de RNF en contexto académico; no constituyen datos oficiales de Spotify ni métricas auditadas. Las tácticas y arquitecturas se presentan como patrones típicos del dominio.
+        </p>
+      </aside>
+
       <nav class="breadcrumbs" aria-label="Migas de pan" id="breadcrumbs">
         <ol class="breadcrumb-list">
           <li><a href="#hero">Inicio</a></li>
@@ -104,24 +107,24 @@
 
         <div class="arch-grid reveal" role="list">
           <div class="arch-card" role="listitem">
-            <span class="arch-icon" aria-hidden="true"><img src="assets/icon-cdn.svg" alt="" width="40" height="40" loading="lazy" /></span>
+            <span class="arch-icon" aria-hidden="true"><img src="public/assets/icon-cdn.svg" alt="" width="40" height="40" loading="lazy" /></span>
             <h3 class="arch-card-title">CDN global</h3>
             <p>Failover y edge cercano al usuario.</p>
           </div>
           <div class="arch-card" role="listitem">
-            <span class="arch-icon" aria-hidden="true"><img src="assets/icon-stream.svg" alt="" width="40" height="40" loading="lazy" /></span>
+            <span class="arch-icon" aria-hidden="true"><img src="public/assets/icon-stream.svg" alt="" width="40" height="40" loading="lazy" /></span>
             <h3 class="arch-card-title">HLS / DASH</h3>
             <p>Streaming adaptativo multibitrate.</p>
           </div>
           <div class="arch-card" role="listitem">
-            <span class="arch-icon" aria-hidden="true"><img src="assets/icon-cache.svg" alt="" width="40" height="40" loading="lazy" /></span>
+            <span class="arch-icon" aria-hidden="true"><img src="public/assets/icon-cache.svg" alt="" width="40" height="40" loading="lazy" /></span>
             <h3 class="arch-card-title">Caché + ML</h3>
             <p>Prefetch inteligente offline-first.</p>
           </div>
         </div>
 
         <div class="tabs" data-tabs="f1">
-          <div class="tabs-list" role="tablist" aria-label="RNF de reproducción continua">
+          <div class="tabs-list" role="tablist" aria-label="RNF de reproducción continua" aria-orientation="horizontal">
             <button type="button" class="tab-btn is-active" role="tab" aria-selected="true" aria-controls="f1-panel-0" id="f1-tab-0">Disponibilidad</button>
             <button type="button" class="tab-btn" role="tab" aria-selected="false" aria-controls="f1-panel-1" id="f1-tab-1">Rendimiento</button>
             <button type="button" class="tab-btn" role="tab" aria-selected="false" aria-controls="f1-panel-2" id="f1-tab-2">Escalabilidad</button>
@@ -158,12 +161,26 @@
               </dl>
             </div>
           </div>
+          <div class="accordion-item">
+            <button type="button" class="accordion-trigger" id="acc-f1-1" aria-expanded="false" aria-controls="acc-f1-panel-1">
+              Rendimiento — Cambio de calidad en tiempo real
+              <span class="accordion-icon" aria-hidden="true"></span>
+            </button>
+            <div class="accordion-panel" id="acc-f1-panel-1" role="region" aria-labelledby="acc-f1-1" hidden>
+              <dl class="scenario-dl">
+                <dt>Fuente</dt><dd>Usuario en movilidad con ancho de banda variable.</dd>
+                <dt>Estímulo</dt><dd>Caída brusca de throughput; el reproductor debe bajar de bitrate.</dd>
+                <dt>Respuesta</dt><dd>Transición a un perfil inferior sin silencio prolongado (ABR).</dd>
+                <dt>Medida</dt><dd>Latencia &lt; 2 s hasta audio estable; mínima interrupción perceptible.</dd>
+              </dl>
+            </div>
+          </div>
         </div>
 
         <div class="relevance reveal">
           <h3 class="subsection-title">Relevancia</h3>
           <ul class="check-list">
-            <li>78 % de usuarios escuchan en movilidad.</li>
+            <li>78 % de usuarios escuchan en movilidad <span class="text-muted-soft">(dato ilustrativo; ver nota metodológica).</span></li>
             <li>Interrupciones generan abandono inmediato.</li>
             <li>Competencia intensa: migración a servicios más estables.</li>
             <li>Pausas &gt; 3 s percibidas como fallo.</li>
@@ -230,24 +247,24 @@
 
         <div class="arch-grid reveal" role="list">
           <div class="arch-card" role="listitem">
-            <span class="arch-icon" aria-hidden="true"><img src="assets/icon-pipeline.svg" alt="" width="40" height="40" loading="lazy" /></span>
+            <span class="arch-icon" aria-hidden="true"><img src="public/assets/icon-pipeline.svg" alt="" width="40" height="40" loading="lazy" /></span>
             <h3 class="arch-card-title">Pipeline batch</h3>
             <p>Spark nocturno → Cassandra.</p>
           </div>
           <div class="arch-card" role="listitem">
-            <span class="arch-icon" aria-hidden="true"><img src="assets/icon-cache-layers.svg" alt="" width="40" height="40" loading="lazy" /></span>
+            <span class="arch-icon" aria-hidden="true"><img src="public/assets/icon-cache-layers.svg" alt="" width="40" height="40" loading="lazy" /></span>
             <h3 class="arch-card-title">Caché L1–L3</h3>
             <p>Redis, Memcached, Cassandra.</p>
           </div>
           <div class="arch-card" role="listitem">
-            <span class="arch-icon" aria-hidden="true"><img src="assets/icon-brain.svg" alt="" width="40" height="40" loading="lazy" /></span>
+            <span class="arch-icon" aria-hidden="true"><img src="public/assets/icon-brain.svg" alt="" width="40" height="40" loading="lazy" /></span>
             <h3 class="arch-card-title">Modelo híbrido</h3>
             <p>CF offline + bandits online.</p>
           </div>
         </div>
 
         <div class="tabs" data-tabs="f2">
-          <div class="tabs-list" role="tablist" aria-label="RNF de recomendaciones">
+          <div class="tabs-list" role="tablist" aria-label="RNF de recomendaciones" aria-orientation="horizontal">
             <button type="button" class="tab-btn is-active" role="tab" aria-selected="true" aria-controls="f2-panel-0" id="f2-tab-0">Rendimiento</button>
             <button type="button" class="tab-btn" role="tab" aria-selected="false" aria-controls="f2-panel-1" id="f2-tab-1">Precisión funcional</button>
           </div>
@@ -380,24 +397,24 @@
 
         <div class="arch-grid reveal" role="list">
           <div class="arch-card" role="listitem">
-            <span class="arch-icon" aria-hidden="true"><img src="assets/icon-events.svg" alt="" width="40" height="40" loading="lazy" /></span>
+            <span class="arch-icon" aria-hidden="true"><img src="public/assets/icon-events.svg" alt="" width="40" height="40" loading="lazy" /></span>
             <h3 class="arch-card-title">Event sourcing</h3>
             <p>Comandos inmutables en Kafka.</p>
           </div>
           <div class="arch-card" role="listitem">
-            <span class="arch-icon" aria-hidden="true"><img src="assets/icon-sync.svg" alt="" width="40" height="40" loading="lazy" /></span>
+            <span class="arch-icon" aria-hidden="true"><img src="public/assets/icon-sync.svg" alt="" width="40" height="40" loading="lazy" /></span>
             <h3 class="arch-card-title">CRDT</h3>
             <p>Convergencia sin bloqueos fuertes.</p>
           </div>
           <div class="arch-card" role="listitem">
-            <span class="arch-icon" aria-hidden="true"><img src="assets/icon-socket.svg" alt="" width="40" height="40" loading="lazy" /></span>
+            <span class="arch-icon" aria-hidden="true"><img src="public/assets/icon-socket.svg" alt="" width="40" height="40" loading="lazy" /></span>
             <h3 class="arch-card-title">WebSocket</h3>
             <p>Canal persistente &lt; 100 ms.</p>
           </div>
         </div>
 
         <div class="tabs" data-tabs="f3">
-          <div class="tabs-list" role="tablist" aria-label="RNF multidispositivo">
+          <div class="tabs-list" role="tablist" aria-label="RNF multidispositivo" aria-orientation="horizontal">
             <button type="button" class="tab-btn is-active" role="tab" aria-selected="true" aria-controls="f3-panel-0" id="f3-tab-0">Interoperabilidad</button>
             <button type="button" class="tab-btn" role="tab" aria-selected="false" aria-controls="f3-panel-1" id="f3-tab-1">Consistencia</button>
           </div>
@@ -631,6 +648,7 @@
       <footer class="site-footer" role="contentinfo">
         <div class="footer-inner">
           <p class="footer-credit">Proyecto académico — Análisis de RNF inspirado en el dominio de <strong>Spotify</strong>. Logotipos y marca citados con fines educativos.</p>
+          <p class="footer-disclaimer"><a href="#nota-metodologica">Nota metodológica</a> sobre cifras ilustrativas.</p>
           <p class="footer-meta">HTML · CSS · JavaScript · <time datetime="2026">2026</time></p>
         </div>
       </footer>
@@ -650,6 +668,6 @@
     </div>
   </div>
 
-  <script src="script.js" defer></script>
+  <script src="public/js/script.js" defer></script>
 </body>
 </html>

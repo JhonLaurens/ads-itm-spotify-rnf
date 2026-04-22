@@ -53,6 +53,10 @@ html {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }
 
 body {
@@ -156,31 +160,6 @@ button:focus-visible,
   font-weight: 600;
 }
 
-.top-nav-list {
-  display: none;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  gap: 1.25rem;
-}
-
-@media (min-width: 900px) {
-  .top-nav-list {
-    display: flex;
-  }
-}
-
-.top-nav-list a {
-  color: var(--text-muted);
-  font-weight: 500;
-  font-size: 0.9rem;
-}
-
-.top-nav-list a:hover {
-  color: var(--spotify-green);
-  text-decoration: none;
-}
-
 .header-actions {
   display: flex;
   align-items: center;
@@ -223,7 +202,8 @@ button:focus-visible,
   cursor: pointer;
 }
 
-@media (min-width: 900px) {
+/* Ocultar hamburguesa solo cuando el menú lateral fijo ya es visible */
+@media (min-width: 1100px) {
   .menu-toggle {
     display: none;
   }
@@ -530,6 +510,47 @@ button:focus-visible,
 
 #breadcrumb-current {
   color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* Nota metodológica */
+.disclaimer {
+  margin: 0 0 1.5rem;
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius);
+  border: 1px solid color-mix(in srgb, var(--spotify-green) 35%, var(--border));
+  background: color-mix(in srgb, var(--spotify-green) 8%, var(--surface));
+  max-width: 72ch;
+}
+
+.disclaimer-title {
+  margin: 0 0 0.5rem;
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--spotify-green);
+}
+
+.disclaimer-text {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+
+.text-muted-soft {
+  font-size: 0.92em;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.footer-disclaimer {
+  margin: 0 0 0.5rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.footer-disclaimer a {
   font-weight: 600;
 }
 
@@ -1240,5 +1261,52 @@ button:focus-visible,
 @media (max-width: 1099px) {
   .header-inner {
     padding-left: 1rem;
+  }
+}
+
+/* Impresión / PDF desde el navegador */
+@media print {
+  .skip-link,
+  .site-header,
+  .sidebar,
+  .menu-toggle,
+  .theme-toggle,
+  .drawer-overlay,
+  .mobile-drawer,
+  .wave-canvas,
+  #tooltip-root,
+  #modal-root {
+    display: none !important;
+  }
+
+  body {
+    background: #fff !important;
+    color: #191414 !important;
+  }
+
+  .main {
+    margin-left: 0 !important;
+    padding: 0 0.5rem 1rem !important;
+    max-width: none !important;
+  }
+
+  .layout {
+    max-width: none !important;
+  }
+
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .section,
+  .tradeoff-grid,
+  .tactic-cards {
+    break-inside: avoid;
+  }
+
+  a[href^="#"] {
+    text-decoration: none;
+    color: inherit !important;
   }
 }

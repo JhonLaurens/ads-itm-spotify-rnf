@@ -36,32 +36,47 @@ npx serve .
 
 Sigue la URL que indique la herramienta (por ejemplo `http://localhost:3000`).
 
-## Estructura de archivos
+## Estructura del repositorio
 
-| Archivo / carpeta | Descripción |
-|-------------------|-------------|
-| `index.html` | Estructura semántica, secciones y componentes |
-| `styles.css` | Estilos modulares, tema claro/oscuro, responsive |
-| `script.js` | Pestañas, acordeón, tooltips, modal, scroll spy, matriz, ondas en canvas |
-| `assets/` | Logotipo e iconos SVG |
+```
+ADS-itm/
+├── index.html              # Punto de entrada de la web (raíz del sitio)
+├── README.md               # Este archivo
+├── docs/                   # Documentos académicos (PDF, Word, PowerPoint)
+│   └── README.md           # Índice de entregables en docs/
+└── public/                 # Recursos estáticos servidos por la web
+    ├── css/
+    │   └── styles.css      # Estilos (tema claro/oscuro, layout, componentes)
+    ├── js/
+    │   └── script.js       # Lógica: pestañas, acordeón, modal, matriz, canvas…
+    └── assets/
+        └── *.svg           # Logotipo e iconos
+```
+
+- **`index.html`** queda en la **raíz** para abrir o desplegar el sitio sin configuración extra.
+- **`public/`** agrupa CSS, JS e imágenes; las rutas en `index.html` son relativas (`public/css/...`, etc.).
+- **`docs/`** concentra material de apoyo y entregables que **no** debe mezclarse con los assets de la página.
 
 ## Funciones interactivas
 
-- **Barra superior:** enlaces a secciones; botón de **tema claro/oscuro** (la preferencia se guarda en `localStorage`).
-- **Menú móvil:** icono de menú (pantallas estrechas) para las mismas secciones.
-- **Barra lateral (escritorio):** índice con sección activa y barra de progreso de lectura.
+- **Cabecera:** marca y botón de **tema claro/oscuro** (la preferencia se guarda en `localStorage`).
+- **Menú lateral (escritorio):** índice con sección activa y barra de progreso de lectura.
+- **Menú móvil / tablet:** icono de menú cuando el lateral no está fijo (ancho menor a 1100px), mismas secciones que el lateral.
 - **Migas de pan:** reflejan la sección visible al hacer scroll.
-- **Pestañas:** en cada funcionalidad, alternan los RNF descritos.
+- **Nota metodológica:** bloque visible bajo el hero aclarando que las cifras son ilustrativas (material académico).
+- **Pestañas:** en cada funcionalidad, alternan los RNF descritos; **teclado:** flechas ←/→ (o ↑/↓), `Home`, `End`, foco con *roving tabindex*.
 - **Acordeones:** escenarios arquitectónicos desplegables.
-- **Tooltips:** al pasar el cursor (o al enfocar con teclado) sobre métricas subrayadas.
-- **Modales:** botón «Detalle» en cada táctica para ampliar explicación.
+- **Tooltips:** métricas subrayadas; con foco se enlaza `aria-describedby` al globo de ayuda.
+- **Modales:** «Detalle» en tácticas; **trampa de foco** con `Tab`, cierre con `Escape` y scroll del cuerpo bloqueado mientras está abierto.
 - **Matriz:** celdas interactivas con texto explicativo debajo de la tabla.
+- **Impresión:** estilos `@media print` (ocultan cabecera, lateral, ondas, modal, tooltips).
 
 ## Accesibilidad
 
 - Enlace «Saltar al contenido», etiquetas ARIA en navegación, pestañas y diálogo modal.
 - Contraste alto entre texto y fondo en ambos temas.
-- Navegación por teclado: `Tab`, `Enter`/`Espacio`, `Escape` para cerrar modal o menú móvil.
+- Navegación por teclado: `Tab`, `Enter`/`Espacio`, pestañas con flechas, `Escape` para cerrar modal o menú móvil.
+- `prefers-reduced-motion`: animaciones atenuadas y bloques `.reveal` visibles sin transición.
 
 ## Créditos
 

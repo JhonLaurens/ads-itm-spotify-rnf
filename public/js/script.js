@@ -318,24 +318,72 @@
     });
   }
 
-  /* ---------- Tabs ---------- */
+  /* ---------- Tabs (clic + teclado: ←/→/Home/End, roving tabindex) ---------- */
   function initTabs() {
+    function activateTab(buttons, panels, index) {
+      var len = buttons.length;
+      if (!len) return;
+      var i = ((index % len) + len) % len;
+      buttons.forEach(function (b, j) {
+        var on = j === i;
+        b.classList.toggle("is-active", on);
+        b.setAttribute("aria-selected", on ? "true" : "false");
+        b.setAttribute("tabindex", on ? "0" : "-1");
+      });
+      panels.forEach(function (p, j) {
+        var on = j === i;
+        p.classList.toggle("is-active", on);
+        p.hidden = !on;
+      });
+    }
+
     $all("[data-tabs]").forEach(function (root) {
       var buttons = $all(".tab-btn", root);
       var panels = $all(".tab-panel", root);
+      var list = $(".tabs-list", root);
+      if (!buttons.length) return;
+
+      var currentIndex = 0;
+      var bi;
+      for (bi = 0; bi < buttons.length; bi++) {
+        if (buttons[bi].getAttribute("aria-selected") === "true") {
+          currentIndex = bi;
+          break;
+        }
+      }
+      activateTab(buttons, panels, currentIndex);
+
       buttons.forEach(function (btn, idx) {
         btn.addEventListener("click", function () {
-          buttons.forEach(function (b, j) {
-            var on = j === idx;
-            b.classList.toggle("is-active", on);
-            b.setAttribute("aria-selected", on ? "true" : "false");
-          });
-          panels.forEach(function (p, j) {
-            var on = j === idx;
-            p.classList.toggle("is-active", on);
-            p.hidden = !on;
-          });
+          activateTab(buttons, panels, idx);
         });
+      });
+
+      if (!list) return;
+
+      list.addEventListener("keydown", function (e) {
+        var focused = buttons.indexOf(document.activeElement);
+        if (focused < 0) return;
+
+        var next = focused;
+        if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+          e.preventDefault();
+          next = focused + 1;
+        } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+          e.preventDefault();
+          next = focused - 1;
+        } else if (e.key === "Home") {
+          e.preventDefault();
+          next = 0;
+        } else if (e.key === "End") {
+          e.preventDefault();
+          next = buttons.length - 1;
+        } else {
+          return;
+        }
+
+        activateTab(buttons, panels, next);
+        buttons[next].focus();
       });
     });
   }
@@ -352,15 +400,17 @@
     });
   }
 
-  /* ---------- Tooltips ---------- */
+  /* ---------- Tooltips (posición + aria-describedby al foco) ---------- */
   function initTooltips() {
     var tipRoot = $("#tooltip-root");
     if (!tipRoot) return;
     var hideTimer;
+    var tipId = "tooltip-root";
 
     function positionTip(el, text) {
       tipRoot.textContent = text;
       tipRoot.hidden = false;
+      tipRoot.id = tipId;
       var rect = el.getBoundingClientRect();
       var tr = tipRoot.getBoundingClientRect();
       var left = rect.left + rect.width / 2 - tr.width / 2;
@@ -372,9 +422,10 @@
       tipRoot.style.top = top + "px";
     }
 
-    function hide() {
+    function hide(el) {
       tipRoot.hidden = true;
       tipRoot.textContent = "";
+      if (el && el.removeAttribute) el.removeAttribute("aria-describedby");
     }
 
     $all(".metric-tip").forEach(function (el) {
@@ -384,17 +435,22 @@
         positionTip(el, text);
       });
       el.addEventListener("mouseleave", function () {
-        hideTimer = setTimeout(hide, 100);
+        hideTimer = setTimeout(function () {
+          hide();
+        }, 100);
       });
       el.addEventListener("focus", function () {
         var text = el.getAttribute("data-tooltip") || "";
         positionTip(el, text);
+        el.setAttribute("aria-describedby", tipId);
       });
-      el.addEventListener("blur", hide);
+      el.addEventListener("blur", function () {
+        hide(el);
+      });
     });
   }
 
-  /* ---------- Modal ---------- */
+  /* ---------- Modal (trampa de foco + bloqueo scroll) ---------- */
   function initModal() {
     var root = $("#modal-root");
     var titleEl = $("#modal-title");
@@ -402,6 +458,45 @@
     if (!root || !titleEl || !bodyEl) return;
 
     var lastFocus;
+    var prevOverflow = "";
+
+    var focusableSel =
+      'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+    function getFocusables() {
+      var dialog = $(".modal-dialog", root);
+      if (!dialog) return [];
+      return [].slice.call(dialog.querySelectorAll(focusableSel)).filter(function (el) {
+        return el.offsetParent !== null || (el.getClientRects && el.getClientRects().length);
+      });
+    }
+
+    function onTrapKey(e) {
+      if (root.hidden || e.key !== "Tab") return;
+      var list = getFocusables();
+      if (!list.length) {
+        e.preventDefault();
+        return;
+      }
+      if (list.length === 1) {
+        e.preventDefault();
+        list[0].focus();
+        return;
+      }
+      var first = list[0];
+      var last = list[list.length - 1];
+      if (e.shiftKey) {
+        if (document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else {
+        if (document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    }
 
     function open(id) {
       var data = tacticModals[id];
@@ -411,14 +506,20 @@
       bodyEl.innerHTML = data.html;
       root.hidden = false;
       root.setAttribute("aria-hidden", "false");
-      $(".modal-close", root).focus();
+      prevOverflow = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      document.addEventListener("keydown", onTrapKey, true);
+      var closeBtn = $(".modal-close", root);
+      if (closeBtn && closeBtn.focus) closeBtn.focus();
     }
 
     function close() {
+      document.removeEventListener("keydown", onTrapKey, true);
       root.hidden = true;
       root.setAttribute("aria-hidden", "true");
       bodyEl.innerHTML = "";
-      if (lastFocus && lastFocus.focus) lastFocus.focus();
+      document.body.style.overflow = prevOverflow;
+      if (lastFocus && typeof lastFocus.focus === "function") lastFocus.focus();
     }
 
     $all(".btn-modal").forEach(function (btn) {

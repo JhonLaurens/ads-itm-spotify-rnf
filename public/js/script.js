@@ -171,7 +171,11 @@
       } catch (e) {}
     });
 
-  /* ---------- Wave canvas ---------- */
+  /* ---------- Wave canvas ----------
+   * Escritorio a veces pinta con ancho 0 antes del layout (sidebar, fuentes).
+   * Un solo bucle rAF + ResizeObserver + fallback desde .hero evita ondas “muertas”.
+   * prefers-reduced-motion: animación muy lenta en lugar de congelar por completo.
+   */
   function initWave() {
     var canvas = $("#wave-canvas");
     if (!canvas || !canvas.getContext) return;
@@ -183,59 +187,129 @@
       phases.push(Math.random() * Math.PI * 2);
     }
 
+    var motionMq = window.matchMedia ? window.matchMedia("(prefers-reduced-motion: reduce)") : null;
+    var rafId = null;
+    var reducedFrame = 0;
+
+    function prefersReduced() {
+      return motionMq && motionMq.matches;
+    }
+
+    function cssSize() {
+      var w = canvas.clientWidth;
+      var h = canvas.clientHeight;
+      if (w < 4) {
+        var hero = canvas.closest(".hero");
+        if (hero) w = Math.floor(hero.getBoundingClientRect().width);
+      }
+      if (w < 4) w = Math.floor(window.innerWidth) || 320;
+      if (h < 4) h = 200;
+      return { w: w, h: h };
+    }
+
     function resize() {
-      var rect = canvas.getBoundingClientRect();
-      var dpr = window.devicePixelRatio || 1;
-      canvas.width = rect.width * dpr;
-      canvas.height = rect.height * dpr;
+      var sz = cssSize();
+      var dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+      var bw = Math.max(4, Math.floor(sz.w * dpr));
+      var bh = Math.max(4, Math.floor(sz.h * dpr));
+      canvas.width = bw;
+      canvas.height = bh;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
 
-    var reduced =
-      window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
     function draw(t) {
-      var w = canvas.getBoundingClientRect().width;
-      var h = canvas.getBoundingClientRect().height;
+      var sz = cssSize();
+      var w = sz.w;
+      var h = sz.h;
+      if (w < 2 || h < 2) return;
       ctx.clearRect(0, 0, w, h);
       var bw = w / bars;
       var isLight = document.documentElement.getAttribute("data-theme") === "light";
       var green = isLight ? "#158a42" : "#1db954";
-      var tSec = t * 0.002;
+      var slow = prefersReduced();
+      var tSec = (t || 0) * (slow ? 0.00035 : 0.002);
       for (i = 0; i < bars; i++) {
         var amp = 0.35 + 0.65 * Math.sin(tSec * 1.2 + phases[i]);
-        var bh = amp * h * 0.85;
+        var barH = amp * h * 0.85;
         var x = i * bw + bw * 0.15;
-        var y = (h - bh) / 2;
+        var y = (h - barH) / 2;
         ctx.fillStyle = green;
         ctx.globalAlpha = 0.2 + amp * 0.55;
         ctx.beginPath();
-        ctx.roundRect(x, y, bw * 0.7, bh, 4);
+        ctx.roundRect(x, y, bw * 0.7, barH, 4);
         ctx.fill();
       }
       ctx.globalAlpha = 1;
     }
 
-    var raf;
     function loop(ts) {
-      draw(ts || 0);
-      if (!reduced) raf = requestAnimationFrame(loop);
+      rafId = window.requestAnimationFrame(loop);
+      if (prefersReduced()) {
+        reducedFrame += 1;
+        if (reducedFrame % 12 !== 0) return;
+      } else {
+        reducedFrame = 0;
+      }
+      draw(ts || performance.now());
     }
 
-    function bootCanvas() {
-      resize();
-      if (!reduced) loop(0);
-      else draw(0);
+    function startLoopOnce() {
+      if (rafId != null) return;
+      rafId = window.requestAnimationFrame(loop);
     }
-    bootCanvas();
-    requestAnimationFrame(bootCanvas);
 
-    window.addEventListener("resize", function () {
+    function boot() {
       resize();
-      if (reduced) draw(0);
+      draw(performance.now());
+      startLoopOnce();
+    }
+
+    boot();
+    window.requestAnimationFrame(function () {
+      resize();
+      draw(performance.now());
+    });
+    window.requestAnimationFrame(function () {
+      window.requestAnimationFrame(function () {
+        resize();
+        draw(performance.now());
+        startLoopOnce();
+      });
     });
 
+    window.addEventListener(
+      "resize",
+      function () {
+        resize();
+      },
+      { passive: true }
+    );
+
+    window.addEventListener("load", function () {
+      resize();
+      draw(performance.now());
+    });
+
+    if (typeof ResizeObserver !== "undefined") {
+      var ro = new ResizeObserver(function () {
+        resize();
+      });
+      if (canvas.parentElement) ro.observe(canvas.parentElement);
+      ro.observe(canvas);
+    }
+
+    function onMotionChange() {
+      reducedFrame = 0;
+      resize();
+      draw(performance.now());
+    }
+    if (motionMq) {
+      if (motionMq.addEventListener) motionMq.addEventListener("change", onMotionChange);
+      else if (motionMq.addListener) motionMq.addListener(onMotionChange);
+    }
+
     var mo = new MutationObserver(function () {
+      resize();
       draw(performance.now());
     });
     mo.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
